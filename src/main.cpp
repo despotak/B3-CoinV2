@@ -1633,10 +1633,10 @@ bool CTransaction::ConnectInputs(CTxDB& txdb, MapPrevTx inputs, map<uint256, CTx
 
             if((nValueIn - GetValueOut()) >= FUNDAMENTALNODEAMOUNT ){
                 nTxFee = nValueIn - FUNDAMENTALNODEAMOUNT - GetValueOut();
-                LogPrintf("ConnectInputs : Funamental Transaction\n");
+                //LogPrintf("ConnectInputs : Funamental Transaction\n");
             } else{
                 nTxFee = nValueIn - GetValueOut();
-                LogPrintf("ConnectInputs : Not a Funamental Transaction\n");
+                //LogPrintf("ConnectInputs : Not a Funamental Transaction\n");
             }
 
 
