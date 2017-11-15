@@ -729,9 +729,9 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CTransaction &tx, bool fLimitFree,
 
         if((tx.GetValueIn(mapInputs) - tx.GetValueOut()) >= FUNDAMENTALNODEAMOUNT){
             nFees = tx.GetValueIn(mapInputs) - FUNDAMENTALNODEAMOUNT - tx.GetValueOut();
-            LogPrintf("Fundamental transaction\n");
+            //LogPrintf("Fundamental transaction\n");
         } else{
-            LogPrintf("Not Fundamental transaction\n");
+            //LogPrintf("Not Fundamental transaction\n");
             nFees = tx.GetValueIn(mapInputs) - tx.GetValueOut();
         }
 
