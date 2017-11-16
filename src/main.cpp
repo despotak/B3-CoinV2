@@ -831,9 +831,8 @@ bool AcceptableFundamentalTxn(CTxMemPool& pool, CTransaction &tx, bool ignoreFee
         return tx.DoS(100, error("AcceptableFundamentalTxn : coinstake as individual tx"));
 
     // is it already in the memory pool?
-    uint256 hash = tx.GetHash();
-    if (pool.exists(hash))
-        return false;
+    /** Since it is already a spent transaction we have to skip it. 
+    **/
 
 
     // Check for conflicts with in-memory transactions
