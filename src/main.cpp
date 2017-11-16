@@ -852,6 +852,7 @@ bool AcceptableFundamentalTxn(CTxMemPool& pool, CTransaction &tx, bool ignoreFee
     {
         CTxDB txdb("r");
 
+        uint256 hash = tx.GetHash();
         MapPrevTx mapInputs;
         map<uint256, CTxIndex> mapUnused;
         bool fInvalid = false;
