@@ -1,5 +1,5 @@
 
-// Copyright (c) 2014-2015 The Bitsend developers
+// Copyright (c) 2016-2017 The B3Coin developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 #ifndef FUNDAMENTALNODE_H
@@ -28,8 +28,8 @@
 
 #define FUNDAMENTALNODE_MIN_CONFIRMATIONS           15
 #define FUNDAMENTALNODE_MIN_FNEP_SECONDS           (30*60)
-#define FUNDAMENTALNODE_MIN_FNE_SECONDS            (10*60)  // bitsenddev 12-05 Old 5*60
-#define FUNDAMENTALNODE_PING_SECONDS                (5*60)   // bitsenddev 12-05 OLD 1*60
+#define FUNDAMENTALNODE_MIN_FNE_SECONDS            (10*60)  // b3coindev 12-05 Old 5*60
+#define FUNDAMENTALNODE_PING_SECONDS                (5*60)   // b3coindev 12-05 OLD 1*60
 #define FUNDAMENTALNODE_EXPIRATION_SECONDS          (65*60)
 #define FUNDAMENTALNODE_REMOVAL_SECONDS             (70*60)
 
@@ -318,7 +318,7 @@ public:
         
         // 100: G=0 101: MK just test
         strMainPubKey = "04351636759f760e78bdee87ab1c966b6a22e42601c21da396a7e6a5fc33787fd6bbbcf70f1bb5b1853352decc719cf9a37b55c9c1c4c48d4c9ff6998b2416137b";
-        strTestPubKey = "04CBC82D432A42A05F9474A5554413A6166767C928DE669C40144DC585FB85F15E28035EADE398A6B8E38C24A001EAB50023124C4D8328C99EC2FDE47ED54B17BF";  // bitsenddev do not use 04-2015
+        strTestPubKey = "04CBC82D432A42A05F9474A5554413A6166767C928DE669C40144DC585FB85F15E28035EADE398A6B8E38C24A001EAB50023124C4D8328C99EC2FDE47ED54B17BF";  // b3coindev do not use 04-2015
         enabled = false;
     }
 
