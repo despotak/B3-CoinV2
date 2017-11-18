@@ -1225,7 +1225,7 @@ int64_t GetProofOfStakeReward(const CBlockIndex* pindexPrev, int64_t nCoinAge, i
 
 int64_t GetFundamentalnodePayment(int nHeight, int64_t blockValue)
 {
-    int64_t ret = (60 * blockValue)/ 100; // start at 20%
+    int64_t ret = (60 * blockValue)/ 100; //
 
     /* if(Params().NetworkIDString() == CBaseChainParams::TESTNET) {
         if(nHeight > 46000)             ret += blockValue / 20; //25% - 2014-10-07
@@ -3886,10 +3886,9 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
     {
 		///TODO: Starts
          //probably one the extensions
-        //darkSendPool.ProcessMessageDarksend(pfrom, strCommand, vRecv);
+
         fnmanager.ProcessMessage(pfrom, strCommand, vRecv);
         ProcessMessageFundamentalnodePayments(pfrom, strCommand, vRecv);
-        //ProcessMessageInstantX(pfrom, strCommand, vRecv);
         ProcessSpork(pfrom, strCommand, vRecv);
         ProcessMessageFundamentalnodePOS(pfrom, strCommand, vRecv); 
 		///TODO: ends

@@ -50,7 +50,7 @@ void CActiveFundamentalnode::ManageStatus()
                 LogPrintf("CActiveFundamentalnode::ManageStatus() - not capable: %s\n", notCapableReason.c_str());
                 return;
             }
-        } else if(service.GetPort() == 30420) {
+        } else if(service.GetPort() != 30420) {
             notCapableReason = "Invalid port: " + boost::lexical_cast<string>(service.GetPort()) + " - 30420 is only supported on mainnet.";
             status = FUNDAMENTALNODE_NOT_CAPABLE;
             LogPrintf("CActiveFundamentalnode::ManageStatus() - not capable: %s\n", notCapableReason.c_str());

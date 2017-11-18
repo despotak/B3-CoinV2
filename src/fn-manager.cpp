@@ -526,22 +526,7 @@ CFundamentalnode* CFundamentalnodeMan::GetFundamentalnodeByRank(int nRank, int64
 void CFundamentalnodeMan::ProcessFundamentalnodeConnections()
 {
     //Not Implemented
-    /* //we don't care about this for regtest
-    if(RegTest()) return;
 
-    LOCK(cs_vNodes);
-
-    if(!darkSendPool.pSubmittedToFundamentalnode) return;
-
-    BOOST_FOREACH(CNode* pnode, vNodes)
-    {
-        if(darkSendPool.pSubmittedToFundamentalnode->addr == pnode->addr) continue;
-
-        if(pnode->fDarkSendMaster){
-            LogPrintf("Closing Fundamentalnode connection %s \n", pnode->addr.ToString().c_str());
-            pnode->CloseSocketDisconnect();
-        }
-    } */
 }
 
 void CFundamentalnodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CDataStream& vRecv)
@@ -724,16 +709,6 @@ void CFundamentalnodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, 
         } else {
             LogPrintf("fne - Rejected Fundamentalnode entry %s\n", addr.ToString().c_str());
 
-            LogPrintf("dne - %s from %s  was not accepted into the memory pool\n", tx.GetHash().ToString().c_str(),
-                    pfrom->addr.ToString().c_str());
-            /* int nDoS = 0;
-            if (state.IsInvalid(nDoS))
-            {
-                LogPrintf("dsee - %s from %s  was not accepted into the memory pool\n", tx.GetHash().ToString().c_str(),
-                    pfrom->addr.ToString().c_str());
-                if (nDoS > 0)
-                    Misbehaving(pfrom->GetId(), nDoS);
-            } */
         }
     }
 

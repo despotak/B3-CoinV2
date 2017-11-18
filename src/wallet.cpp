@@ -1473,7 +1473,7 @@ bool CWallet::CreateTransaction(const vector<pair<CScript, int64_t> >& vecSend, 
                 if(IsFnPayment){
 
                     //nValue should be equal to FUNDAMENTALAMOUNT
-                    if(nTotalValue < FUNDAMENTALNODEAMOUNT){
+                    if(nTotalValue < FUNDAMENTALNODEAMOUNT + 1*COIN){
                         return false;
                     }
 
@@ -1737,6 +1737,10 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
                 vwtxPrev.push_back(pcoin.first);
                 txNew.vout.push_back(CTxOut(0, scriptPubKeyOut));
 
+                if (nCredit >= GetStakeSplitThreshold()){
+                    txNew.vout.push_back(CTxOut(0, txNew.vout[1].scriptPubKey)); //split stake
+                }
+
                 LogPrint("coinstake", "CreateCoinStake : added kernel type=%d\n", whichType);
                 fKernelFound = true;
                 break;
@@ -1802,7 +1806,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         }
     }else{
         if (GetTime() > START_FUNDAMENTALNODE_PAYMENTS){
-            bFundamentalNodePayment = false;
+            bFundamentalNodePayment = true;
         }
     }
 
@@ -1840,8 +1844,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
     int64_t blockValue = nCredit;
     int64_t fundamentalnodePayment = GetFundamentalnodePayment(pindexPrev->nHeight+1, blockValue);
 	
-	if (nCredit >= GetStakeSplitThreshold())
-        txNew.vout.push_back(CTxOut(0, txNew.vout[1].scriptPubKey)); //split stake
+
 	
 	 // Set output amount
     if (!hasPayment && txNew.vout.size() == 3) // 2 stake outputs, stake was split, no fundamentalnode payment
