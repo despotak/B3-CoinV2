@@ -729,9 +729,9 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CTransaction &tx, bool fLimitFree,
 
         if((tx.GetValueIn(mapInputs) - tx.GetValueOut()) >= FUNDAMENTALNODEAMOUNT){
             nFees = tx.GetValueIn(mapInputs) - FUNDAMENTALNODEAMOUNT - tx.GetValueOut();
-            LogPrintf("Fundamental transaction\n");
+            //LogPrintf("Fundamental transaction\n");
         } else{
-            LogPrintf("Not Fundamental transaction\n");
+            //LogPrintf("Not Fundamental transaction\n");
             nFees = tx.GetValueIn(mapInputs) - tx.GetValueOut();
         }
 
@@ -2275,26 +2275,6 @@ bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig) c
         return DoS(100, error("CheckBlock() : bad proof-of-stake block signature"));
 	
 	///TODO: Start 
-	/* // ----------- instantX transaction scanning -----------
-
-    if(!IsSporkActive(SPORK_1_FUNDAMENTALNODE_PAYMENTS_ENFORCEMENT)){
-        BOOST_FOREACH(const CTransaction& tx, block.vtx){
-            if (!tx.IsCoinBase()){
-                //only reject blocks when it's based on complete consensus
-                BOOST_FOREACH(const CTxIn& in, tx.vin){
-                    if(mapLockedInputs.count(in.prevout)){
-                        if(mapLockedInputs[in.prevout] != tx.GetHash()){
-                            LogPrintf("CheckBlock() : found conflicting transaction with transaction lock %s %s\n", mapLockedInputs[in.prevout].ToString().c_str(), tx.GetHash().ToString().c_str());
-                            return state.DoS(0, error("CheckBlock() : found conflicting transaction with transaction lock"),
-                                             REJECT_INVALID, "conflicting-tx-ix");
-                        }
-                    }
-                }
-            }
-        }
-    } else {
-        LogPrintf("CheckBlock() : skipping transaction locking checks\n");
-    }*/
 
 
    // ----------- fundamentalnode payments -----------
@@ -2353,16 +2333,7 @@ bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig) c
 				if(vtx[1].vout[i].nValue == fundamentalnodePaymentAmount && vtx[1].vout[i].scriptPubKey == payee)
                             foundPaymentAndPayee = true;
                     }
-				/*//Bitsenddev 18-10-2015 Bitsend proof of payment Number 2
-				if (chainActive.Tip()->nHeight <= 232500)
-				{
-				int sizesum2 = block.vtx[0].vout.size();
-				if(sizesum2 > 1 && foundPaymentAndPayee == true) 
-				{
-				foundPaymentAndPayee = true;
-				}
-				else {foundPaymentAndPayee = true;}
-				}*/
+
                     CTxDestination address1;
                     ExtractDestination(payee, address1);
                     CBitcoinAddress address2(address1);
