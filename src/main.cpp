@@ -1279,7 +1279,7 @@ unsigned int GetNextTargetRequired(const CBlockIndex* pindexLast, bool fProofOfS
     if ( Params().NetworkID() == CChainParams::TESTNET ){
         CBigNum bnTestTarget;
         bnTestTarget = CBigNum(~uint256(0) >> 9);
-        return bnTestTarget.GetCompact();
+        return bnTargetLimit.GetCompact();
     }
 
     const CBlockIndex* pindexPrev = GetLastBlockIndex(pindexLast, fProofOfStake);
