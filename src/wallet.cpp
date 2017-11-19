@@ -1780,6 +1780,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
     }
 
     // Calculate coin age reward
+    int64_t nReward;
     {
         uint64_t nCoinAge;
         CTxDB txdb("r");
@@ -1787,7 +1788,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         if (!txNew.GetCoinAge(txdb, pindexPrev, nCoinAge))
             return error("CreateCoinStake : failed to calculate coin age");
 
-        int64_t nReward = GetProofOfStakeReward(pindexPrev, nCoinAge, nFees, pIndex0->nHeight+1);
+        nReward = GetProofOfStakeReward(pindexPrev, nCoinAge, nFees, pIndex0->nHeight+1);
         if (nReward <= 0)
             return false;
 
@@ -1842,14 +1843,14 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
     }
 
     int64_t blockValue = nCredit;
-    int64_t fundamentalnodePayment = GetFundamentalnodePayment(pindexPrev->nHeight+1, blockValue);
+    int64_t fundamentalnodePayment = GetFundamentalnodePayment(pindexPrev->nHeight+1, nReward);
 	
 
 	
 	 // Set output amount
     if (!hasPayment && txNew.vout.size() == 3) // 2 stake outputs, stake was split, no fundamentalnode payment
     {
-        txNew.vout[1].nValue = (blockValue / CENT) * CENT;
+        txNew.vout[1].nValue = (blockValue / 2 / CENT) * CENT;
         txNew.vout[2].nValue = blockValue - txNew.vout[1].nValue;
     }
     else if(hasPayment && txNew.vout.size() == 4) // 2 stake outputs, stake was split, plus a fundamentalnode payment
