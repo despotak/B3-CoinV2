@@ -1135,7 +1135,7 @@ void CWallet::AvailableCoins(vector<COutput>& vCoins, bool fOnlyConfirmed, const
 
             if(IsFnBurntCoins){
                 for (unsigned int i = 0; i < pcoin->vout.size(); i++)
-                    if (!(pcoin->IsSpent(i)) && IsMine(pcoin->vout[i]) && (pcoin->vout[i].nValue == 1*COIN/*nMinimumInputValue*/) && (GetDebit(*pcoin) >= FUNDAMENTALNODEAMOUNT) &&
+                    if (!(pcoin->IsSpent(i)) && IsMine(pcoin->vout[i]) && (pcoin->vout[i].nValue == 1*COIN/*nMinimumInputValue*/) && (GetDebit(*pcoin) >= GetFNCollateral(pindexBest->nHeight)) &&
                     (!coinControl || !coinControl->HasSelected() || coinControl->IsSelected((*it).first, i)))
                         vCoins.push_back(COutput(pcoin, i, nDepth));
             } else{
@@ -1473,7 +1473,7 @@ bool CWallet::CreateTransaction(const vector<pair<CScript, int64_t> >& vecSend, 
                 if(IsFnPayment){
 
                     //nValue should be equal to FUNDAMENTALAMOUNT
-                    if(nTotalValue < FUNDAMENTALNODEAMOUNT + 1*COIN){
+                    if(nTotalValue < GetFNCollateral(pindexBest->nHeight) + 1*COIN){
                         return false;
                     }
 

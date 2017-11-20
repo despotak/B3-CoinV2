@@ -726,15 +726,17 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CTransaction &tx, bool fLimitFree,
                                 hash.ToString(), nSigOps, MAX_TX_SIGOPS));
 
         int64_t nFees = 0;
+        bool isFNtransaction = false;
 
-        if((tx.GetValueIn(mapInputs) - tx.GetValueOut()) >= FUNDAMENTALNODEAMOUNT){
-            nFees = tx.GetValueIn(mapInputs) - FUNDAMENTALNODEAMOUNT - tx.GetValueOut();
-            //LogPrintf("Fundamental transaction\n");
-        } else{
-            //LogPrintf("Not Fundamental transaction\n");
+        if((tx.GetValueIn(mapInputs) - tx.GetValueOut()) >= GetFNCollateral(pindexBest->nHeight)){
+            nFees = tx.GetValueIn(mapInputs) - GetFNCollateral(pindexBest->nHeight) - tx.GetValueOut();
+            isFNtransaction = true;
+            LogPrintf("Fundamental transaction amount %s \n", nFees);
+        } else {
+            LogPrintf("Not Fundamental transaction\n");
             nFees = tx.GetValueIn(mapInputs) - tx.GetValueOut();
         }
-
+        
         unsigned int nSize = ::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION);
 
         // Don't accept it if it can't get into a block
@@ -771,7 +773,7 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CTransaction &tx, bool fLimitFree,
          * then, it should be rejected otherwise he will lose his coins
          * */
 
-        if ( nFees > txMinFee * 10000)
+        if (!isFNtransaction &&  nFees > txMinFee * 10000)
                     return error("AcceptToMempool : insane fees %s, %d > %d",
                                  hash.ToString(),
                                  nFees, MIN_RELAY_TX_FEE * 10000);
@@ -882,9 +884,9 @@ bool AcceptableFundamentalTxn(CTxMemPool& pool, CTransaction &tx, bool ignoreFee
         int64_t nValueInTxn = tx.GetValueIn(mapInputs);
         int64_t nValueOutTxn = tx.GetValueOut();
 
-        if((nValueInTxn - nValueOutTxn) < FUNDAMENTALNODEAMOUNT){
+        if((nValueInTxn - nValueOutTxn) < GetFNCollateral(pindexBest->nHeight)){
             return false;
-            //return error("AcceptableFundamentalTxn : Transaction has lower value then expected (actual = %d, expected = %d", nValueInTxn, FUNDAMENTALNODEAMOUNT);
+            //return error("AcceptableFundamentalTxn : Transaction has lower value then expected (actual = %d, expected = %d", nValueInTxn, GetFNCollateral(pindexBest->nHeight));
 
         }
 
@@ -1631,8 +1633,8 @@ bool CTransaction::ConnectInputs(CTxDB& txdb, MapPrevTx inputs, map<uint256, CTx
             // Tally transaction fees
             int64_t nTxFee = 0;
 
-            if((nValueIn - GetValueOut()) >= FUNDAMENTALNODEAMOUNT ){
-                nTxFee = nValueIn - FUNDAMENTALNODEAMOUNT - GetValueOut();
+            if((nValueIn - GetValueOut()) >= GetFNCollateral(pindexBlock->nHeight) ){
+                nTxFee = nValueIn - GetFNCollateral(pindexBlock->nHeight) - GetValueOut();
                 //LogPrintf("ConnectInputs : Funamental Transaction\n");
             } else{
                 nTxFee = nValueIn - GetValueOut();
@@ -1788,11 +1790,11 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
             int64_t nTxValueOut = tx.GetValueOut();
 
             //check if burnt txn for fundamental node
-            if((nTxValueIn - nTxValueOut) >= FUNDAMENTALNODEAMOUNT ){
+            if((nTxValueIn - nTxValueOut) >= GetFNCollateral(pindex->nHeight)){
                 IsFnBurntTxn = true;
                 //LogPrintf("IsFnBurntTxn is true now\n");
             }else {
-                //LogPrintf("IsFnBurntTxn is flase Now, for FNamount = %d, nTxValueIn = %d, nTxValurOut = %d\n", FUNDAMENTALNODEAMOUNT, nTxValueIn, nTxValueOut);
+                //LogPrintf("IsFnBurntTxn is flase Now, for FNamount = %d, nTxValueIn = %d, nTxValurOut = %d\n", GetFNCollateral(pindex->nHeight), nTxValueIn, nTxValueOut);
             }
 
             nValueIn += nTxValueIn;
@@ -1802,7 +1804,7 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
                     nFees += nTxValueIn - nTxValueOut;
                     //LogPrintf("ConnectBlock : Not a Funamental Transaction nFees = %d\n", nFees);
                 } else{
-                    nFees += nTxValueIn - FUNDAMENTALNODEAMOUNT - nTxValueOut;
+                    nFees += nTxValueIn - GetFNCollateral(pindex->nHeight) - nTxValueOut;
                     //LogPrintf("ConnectBlock : Funamental Transaction, nFees = %d\n", nFees);
                 }
                 //nFees += nTxValueIn - nTxValueOut;

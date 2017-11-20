@@ -356,8 +356,8 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFe
             int64_t nTxFees = 0;
 
             //check if fundamental node payment
-            if((tx.GetValueIn(mapInputs)-tx.GetValueOut()) >= FUNDAMENTALNODEAMOUNT ){
-                nTxFees = tx.GetValueIn(mapInputs) - FUNDAMENTALNODEAMOUNT - tx.GetValueOut();
+            if((tx.GetValueIn(mapInputs)-tx.GetValueOut()) >= GetFNCollateral(pindexBest->nHeight) ){
+                nTxFees = tx.GetValueIn(mapInputs) - GetFNCollateral(pindexBest->nHeight) - tx.GetValueOut();
                 //LogPrintf("CreateNewBlock : Funamental Transaction nTxFees = %d, tx.GetValueOut() = %d, tx.GetValueIn(mapInputs) = %d", nTxFees, tx.GetValueOut(), tx.GetValueIn(mapInputs));
             } else{
                 nTxFees = tx.GetValueIn(mapInputs)-tx.GetValueOut();
