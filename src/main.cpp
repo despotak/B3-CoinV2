@@ -1837,6 +1837,9 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
 
         int64_t nCalculatedStakeReward = GetProofOfStakeReward(pindex->pprev, nCoinAge, nFees, pindex->nHeight);
 
+	if (pindex->nHeight > 75942 and pindex->nHeight < 80000) {
+            nCalculatedStakeReward = nCalculatedStakeReward * 1.001; // allow a tiny amount of give for bug in 3.0.0.1 wallets
+        }
         if (nStakeReward > nCalculatedStakeReward)
             return DoS(100, error("ConnectBlock() : coinstake pays too much(actual=%d vs calculated=%d)", nStakeReward, nCalculatedStakeReward));
     }
