@@ -731,9 +731,9 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CTransaction &tx, bool fLimitFree,
         if((tx.GetValueIn(mapInputs) - tx.GetValueOut()) >= GetFNCollateral(pindexBest->nHeight)){
             nFees = tx.GetValueIn(mapInputs) - GetFNCollateral(pindexBest->nHeight) - tx.GetValueOut();
             isFNtransaction = true;
-            LogPrintf("Fundamental transaction amount %s \n", nFees);
+            //LogPrintf("Fundamental transaction amount %s \n", nFees);
         } else {
-            LogPrintf("Not Fundamental transaction\n");
+            //LogPrintf("Not Fundamental transaction\n");
             nFees = tx.GetValueIn(mapInputs) - tx.GetValueOut();
         }
         
@@ -773,7 +773,7 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CTransaction &tx, bool fLimitFree,
          * then, it should be rejected otherwise he will lose his coins
          * */
 
-        if (!isFNtransaction &&  nFees > txMinFee * 10000)
+        if ( nFees > (txMinFee * 10000 + 100*COIN))
                     return error("AcceptToMempool : insane fees %s, %d > %d",
                                  hash.ToString(),
                                  nFees, MIN_RELAY_TX_FEE * 10000);
@@ -2304,12 +2304,12 @@ bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig) c
         CBlockIndex *pindex = pindexBest;
         if(IsProofOfStake() && pindex != NULL){
             if(pindex->GetBlockHash() == hashPrevBlock){
-                //int64_t fundamentalnodePaymentAmount = GetFundamentalnodePayment(pindex->nHeight+1, block.vtx[0].GetValueOut());
-				int64_t fundamentalnodePaymentAmount;
+                int64_t fundamentalnodePaymentAmount = GetFundamentalnodePayment(pindex->nHeight+1, vtx[1].GetValueOut());
+                /*int64_t fundamentalnodePaymentAmount;
                 for (int i = vtx[1].vout.size(); i--> 0; ) {
                     fundamentalnodePaymentAmount = vtx[1].vout[i].nValue;
                     break;
-                }
+                }*/
 				
 
 				LogPrintf("## CheckBlock() : fundamental node payment %d\n", fundamentalnodePaymentAmount);
