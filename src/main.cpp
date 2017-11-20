@@ -773,7 +773,7 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CTransaction &tx, bool fLimitFree,
          * then, it should be rejected otherwise he will lose his coins
          * */
 
-        if ( nFees > (txMinFee * 10000 + 100*COIN))
+        if (!isFNtransaction &&  nFees > txMinFee * 10000)
                     return error("AcceptToMempool : insane fees %s, %d > %d",
                                  hash.ToString(),
                                  nFees, MIN_RELAY_TX_FEE * 10000);
