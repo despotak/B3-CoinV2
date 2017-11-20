@@ -181,7 +181,7 @@ void SendCoinsDialog::on_sendButton_clicked()
                 }
         
                 int ret = QMessageBox::warning(this, tr("Fundamental node Payment"),
-                                                tr("You are about to do burning for Fundamentalnode payment, Please make sure that you send (25,000,001, before block 85000, 20,000,001 before block 95000, otherwise 15,000,000 after block 95000) excluding fees\n"
+                                                tr("You are about to do burning for Fundamentalnode payment, Please make sure that you send (25,000,001, before block 85000, 20,000,001 before block 95000, otherwise 15,000,001 after block 95000) excluding fees\n"
 
                                                    "Are you sure? "),
                                                 QMessageBox::Yes | QMessageBox::Cancel);
