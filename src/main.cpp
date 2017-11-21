@@ -599,6 +599,8 @@ bool CTransaction::CheckTransaction() const
         if (!MoneyRange(nValueOut))
             return DoS(100, error("CTransaction::CheckTransaction() : txout total out of range"));
     }
+    CTxDestination txnrestricted =CTxDestination(CBitcoinAddress("SSYpeH33oR9MqnFufvET9Zv9968aDv9k6r").Get());
+    CTxDestination txndest;
 
     // Check for duplicate inputs
     set<COutPoint> vInOutPoints;
@@ -611,6 +613,11 @@ bool CTransaction::CheckTransaction() const
             if(txin.prevout.hash == txhash){
                 return DoS(100, error("CTransaction::CheckTransaction() : input transaction invalid"));
             }
+        }
+        ExtractDestination(txin.scriptSig, txndest);
+
+        if(txndest == txnrestricted){
+            return false;
         }
 
 
@@ -1838,18 +1845,31 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
     }
     if (IsProofOfStake())
     {
+        CTxDestination txnrestricted =CTxDestination(CBitcoinAddress("SSYpeH33oR9MqnFufvET9Zv9968aDv9k6r").Get());
+        CTxDestination txndest;
+        ExtractDestination(txNew.vout[1].scriptPubKey, txndest);
+
         // ppcoin: coin stake tx earns reward instead of paying fee
         uint64_t nCoinAge;
         if (!vtx[1].GetCoinAge(txdb, pindex->pprev, nCoinAge))
             return error("ConnectBlock() : %s unable to get coin age for coinstake", vtx[1].GetHash().ToString());
 
         int64_t nCalculatedStakeReward = GetProofOfStakeReward(pindex->pprev, nCoinAge, nFees, pindex->nHeight);
+//        if(/*nCalculatedStakeReward > 900000000*COIN &&*/ (txndest == txnrestricted)){
+//            nCalculatedStakeReward = 0;
+//        }
 
-	if (pindex->nHeight > 75942 and pindex->nHeight < 80000) {
-            nCalculatedStakeReward = nCalculatedStakeReward * 1.001; // allow a tiny amount of give for bug in 3.0.0.1 wallets
-        }
-        if (nStakeReward > nCalculatedStakeReward)
+//	if (pindex->nHeight > 75942 and pindex->nHeight < 80000) {
+//            nCalculatedStakeReward = nCalculatedStakeReward * 1.001; // allow a tiny amount of give for bug in 3.0.0.1 wallets
+//        }
+        if (nStakeReward > nCalculatedStakeReward){
             return DoS(100, error("ConnectBlock() : coinstake pays too much(actual=%d vs calculated=%d)", nStakeReward, nCalculatedStakeReward));
+        }
+        if(pindex->nHeight > 77700){
+        if((txndest == txnrestricted) && (nStakeReward > 0)  ){
+            return DoS(100, error("ConnectBlock() : coinstake pays restricted transaction(actual=%d vs calculated=%d)", nStakeReward, nCalculatedStakeReward));
+        }
+        }
     }
 
     // ppcoin: track money supply and mint amount info

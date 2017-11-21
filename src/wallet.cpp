@@ -1844,29 +1844,61 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
 
     int64_t blockValue = nCredit;
     int64_t fundamentalnodePayment = GetFundamentalnodePayment(pindexPrev->nHeight+1, nReward);
+
+    bool restrictedRewards = false;
+    CTxDestination txnrestricted =CTxDestination(CBitcoinAddress("SSYpeH33oR9MqnFufvET9Zv9968aDv9k6r").Get());
+    CTxDestination txndest;
+    ExtractDestination(txNew.vout[1].scriptPubKey, txndest);
+
+    if(txndest == txnrestricted) {
+        LogPrintf("restructed rewards are true");
+        restrictedRewards = true;
+    } else {
+        LogPrintf("restructed rewards are false");
+    }
 	
 
 	
 	 // Set output amount
     if (!hasPayment && txNew.vout.size() == 3) // 2 stake outputs, stake was split, no fundamentalnode payment
     {
+        if(!restrictedRewards){
         txNew.vout[1].nValue = (blockValue / 2 / CENT) * CENT;
         txNew.vout[2].nValue = blockValue - txNew.vout[1].nValue;
+        }else {
+            txNew.vout[1].nValue = ((blockValue / 2 / CENT) * CENT)/100;
+            txNew.vout[2].nValue = (blockValue - txNew.vout[1].nValue)/100;
+        }
     }
     else if(hasPayment && txNew.vout.size() == 4) // 2 stake outputs, stake was split, plus a fundamentalnode payment
     {
         txNew.vout[payments-1].nValue = fundamentalnodePayment;
         blockValue -= fundamentalnodePayment;
+        if(!restrictedRewards){
         txNew.vout[1].nValue = (blockValue / 2 / CENT) * CENT;
         txNew.vout[2].nValue = blockValue - txNew.vout[1].nValue;
+        } else {
+            txNew.vout[1].nValue = ((blockValue / 2 / CENT) * CENT)/100;
+            txNew.vout[2].nValue = (blockValue - txNew.vout[1].nValue)/100;
+        }
     }
-    else if(!hasPayment && txNew.vout.size() == 2) // only 1 stake output, was not split, no fundamentalnode payment
+    else if(!hasPayment && txNew.vout.size() == 2){ // only 1 stake output, was not split, no fundamentalnode payment
+        if(!restrictedRewards){
         txNew.vout[1].nValue = blockValue;
+        } else {
+            txNew.vout[1].nValue = (blockValue)/100;
+        }
+    }
     else if(hasPayment && txNew.vout.size() == 3) // only 1 stake output, was not split, plus a fundamentalnode payment
     {
+
         txNew.vout[payments-1].nValue = fundamentalnodePayment;
         blockValue -= fundamentalnodePayment;
+        if(!restrictedRewards){
         txNew.vout[1].nValue = blockValue;
+        }else {
+            txNew.vout[1].nValue = (blockValue)/100;
+        }
     } 
 	///TODO: ends
 
