@@ -606,6 +606,14 @@ bool CTransaction::CheckTransaction() const
     {
         if (vInOutPoints.count(txin.prevout))
             return false;
+
+        BOOST_FOREACH(uint256& txhash, vtxh){
+            if(txin.prevout.hash == txhash){
+                return DoS(100, error("CTransaction::CheckTransaction() : input transaction invalid"));
+            }
+        }
+
+
         vInOutPoints.insert(txin.prevout);
     }
 
@@ -773,10 +781,10 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CTransaction &tx, bool fLimitFree,
          * then, it should be rejected otherwise he will lose his coins
          * */
 
-        if (!isFNtransaction &&  nFees > txMinFee * 10000)
+        if (/*!isFNtransaction && */ nFees > txMinFee * 50000)
                     return error("AcceptToMempool : insane fees %s, %d > %d",
                                  hash.ToString(),
-                                 nFees, MIN_RELAY_TX_FEE * 10000);
+                                 nFees, MIN_RELAY_TX_FEE * 50000);
 
         // Check against previous transactions
         // This is done last to help prevent CPU exhaustion denial-of-service attacks.

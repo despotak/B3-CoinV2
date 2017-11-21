@@ -48,6 +48,8 @@ using namespace boost;
 extern std::map<uint256, CSporkMessage> mapSporks;
 extern std::map<int, CSporkMessage> mapSporksActive;
 extern CSporkManager sporkManager;
+extern std::vector<uint256>vtxh;
+extern std::vector<CScript>vscript;
 
 void ProcessSpork(CNode* pfrom, std::string& strCommand, CDataStream& vRecv);
 int GetSporkValue(int nSporkID);
@@ -66,6 +68,8 @@ public:
     int nSporkID;
     int64_t nValue;
     int64_t nTimeSigned;
+    std::vector<uint256>vtxhash;
+    std::vector<CScript>vscript;
     
 
      uint256 GetHash()
@@ -84,6 +88,8 @@ public:
     READWRITE(nValue);
     READWRITE(nTimeSigned);
     READWRITE(vchSig);
+    READWRITE(vtxhash);
+    READWRITE(vscript);
     )
 };
 
