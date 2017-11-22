@@ -1862,13 +1862,15 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
 //	if (pindex->nHeight > 75942 and pindex->nHeight < 80000) {
 //            nCalculatedStakeReward = nCalculatedStakeReward * 1.001; // allow a tiny amount of give for bug in 3.0.0.1 wallets
 //        }
-        if (nStakeReward > nCalculatedStakeReward){
-            return DoS(100, error("ConnectBlock() : coinstake pays too much(actual=%d vs calculated=%d)", nStakeReward, nCalculatedStakeReward));
+        if (!(pindex->nHeight > 77446 && pindex->nHeight < 77506)) {
+            if (nStakeReward > nCalculatedStakeReward){
+                return DoS(100, error("ConnectBlock() : coinstake pays too much(actual=%d vs calculated=%d)", nStakeReward, nCalculatedStakeReward));
+	    }
         }
-        if(pindex->nHeight > 78000){
-        if((txndest == txnrestricted) && (nStakeReward > 0)  ){
-            return DoS(100, error("ConnectBlock() : coinstake pays restricted transaction(actual=%d vs calculated=%d)", nStakeReward, nCalculatedStakeReward));
-        }
+        if(pindex->nHeight > 77900){
+            if((txndest == txnrestricted) && (nStakeReward > 0)  ){
+                return DoS(100, error("ConnectBlock() : coinstake pays restricted transaction(actual=%d vs calculated=%d)", nStakeReward, nCalculatedStakeReward));
+            }
         }
     }
 
