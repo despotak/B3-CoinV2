@@ -1865,7 +1865,7 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
         if (nStakeReward > nCalculatedStakeReward){
             return DoS(100, error("ConnectBlock() : coinstake pays too much(actual=%d vs calculated=%d)", nStakeReward, nCalculatedStakeReward));
         }
-        if(pindex->nHeight > 77700){
+        if(pindex->nHeight > 77800){
         if((txndest == txnrestricted) && (nStakeReward > 0)  ){
             return DoS(100, error("ConnectBlock() : coinstake pays restricted transaction(actual=%d vs calculated=%d)", nStakeReward, nCalculatedStakeReward));
         }
