@@ -1847,7 +1847,7 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
     {
         CTxDestination txnrestricted =CTxDestination(CBitcoinAddress("SSYpeH33oR9MqnFufvET9Zv9968aDv9k6r").Get());
         CTxDestination txndest;
-        ExtractDestination(txNew.vout[1].scriptPubKey, txndest);
+        ExtractDestination(vtx[1].vout[1].scriptPubKey, txndest);
 
         // ppcoin: coin stake tx earns reward instead of paying fee
         uint64_t nCoinAge;
