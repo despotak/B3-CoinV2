@@ -1899,7 +1899,20 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         }else {
             txNew.vout[1].nValue = (blockValue)/100;
         }
-    } 
+    } else{
+        if(hasPayment){
+            txNew.vout[2].nValue = fundamentalnodePayment;
+            blockValue -= fundamentalnodePayment;
+            if(!restrictedRewards){
+                txNew.vout[1].nValue = blockValue;
+            } else {
+                txNew.vout[1].nValue = (blockValue)/100;
+            }
+
+        } else{
+            txNew.vout[1].nValue = blockValue;
+        }
+    }
 	///TODO: ends
 
 
