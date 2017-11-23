@@ -110,7 +110,7 @@ contains(USE_UPNP, -) {
         #USE_UPNP=1
     #}
     #DEFINES += USE_UPNP=$$USE_UPNP STATICLIB
-    I#NCLUDEPATH += /usr/local/miniupnpc/include
+    #NCLUDEPATH += /usr/local/miniupnpc/include
     #MINIUPNPC_LIB_PATH = /usr/local/miniupnpc/lib
     #LIBS += $$join(MINIUPNPC_LIB_PATH,,-L,) -lminiupnpc
     #win32:LIBS += -liphlpapi
