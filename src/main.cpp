@@ -1855,6 +1855,26 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
             return error("ConnectBlock() : %s unable to get coin age for coinstake", vtx[1].GetHash().ToString());
 
         int64_t nCalculatedStakeReward = GetProofOfStakeReward(pindex->pprev, nCoinAge, nFees, pindex->nHeight);
+        //Check if fn payment was right
+        if(!IsInitialBlockDownload() && (GetBlockTime() > START_FUNDAMENTALNODE_PAYMENTS)){
+            int64_t nFundamentalnodePayment = GetFundamentalnodePayment(pindex->nHeight, nCalculatedStakeReward);
+            bool foundfnpayment = false;
+
+            for (unsigned int i = 0; i < vtx[1].vout.size(); i++) {
+                if(vtx[1].vout[i].nValue == nFundamentalnodePayment ){
+                            foundfnpayment = true;
+                }
+            }
+
+            //Now return false if not found calculated rewards
+            if(!foundfnpayment){
+                return DoS(100, error("ConnectBlock() : no fundamental node payment found "));
+            }
+
+        }
+
+
+
 //        if(/*nCalculatedStakeReward > 900000000*COIN &&*/ (txndest == txnrestricted)){
 //            nCalculatedStakeReward = 0;
 //        }
@@ -2334,12 +2354,12 @@ bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig) c
         CBlockIndex *pindex = pindexBest;
         if(IsProofOfStake() && pindex != NULL){
             if(pindex->GetBlockHash() == hashPrevBlock){
-                int64_t fundamentalnodePaymentAmount = GetFundamentalnodePayment(pindex->nHeight+1, vtx[1].GetValueOut());
-                /*int64_t fundamentalnodePaymentAmount;
+                //int64_t fundamentalnodePaymentAmount = GetFundamentalnodePayment(pindex->nHeight+1, vtx[1].GetValueOut());
+                int64_t fundamentalnodePaymentAmount;
                 for (int i = vtx[1].vout.size(); i--> 0; ) {
                     fundamentalnodePaymentAmount = vtx[1].vout[i].nValue;
                     break;
-                }*/
+                }
 				
 
 				LogPrintf("## CheckBlock() : fundamental node payment %d\n", fundamentalnodePaymentAmount);
