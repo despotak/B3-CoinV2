@@ -1856,7 +1856,7 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
 
         int64_t nCalculatedStakeReward = GetProofOfStakeReward(pindex->pprev, nCoinAge, nFees, pindex->nHeight);
         //Check if fn payment was right
-        if(!IsInitialBlockDownload() && (GetBlockTime() > START_FUNDAMENTALNODE_PAYMENTS)){
+        if(!IsInitialBlockDownload() && (GetBlockTime() > START_FUNDAMENTALNODE_PAYMENTS) && (pindex->nHeight > 78050)){
             int64_t nFundamentalnodePayment = GetFundamentalnodePayment(pindex->nHeight, nCalculatedStakeReward);
             bool foundfnpayment = false;
 
