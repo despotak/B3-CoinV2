@@ -720,7 +720,7 @@ void CFundamentalnodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, 
         bool stop;
         vRecv >> vin >> vchSig >> sigTime >> stop;
 
-        //LogPrintf("fnep - Received: vin: %s sigTime: %lld stop: %s\n", vin.ToString().c_str(), sigTime, stop ? "true" : "false");
+        LogPrintf("fnep - Received: vin: %s sigTime: %lld stop: %s\n", vin.ToString().c_str(), sigTime, stop ? "true" : "false");
 
         if (sigTime > GetAdjustedTime() + 60 * 60) {
             LogPrintf("fnep - Signature rejected, too far into the future %s\n", vin.ToString().c_str());
@@ -891,6 +891,7 @@ void CFundamentalnodeMan::Remove(CTxIn vin)
             vFundamentalnodes.erase(it);
             break;
         }
+        ++it;
     }
 }
 
