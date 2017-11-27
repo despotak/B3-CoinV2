@@ -1809,7 +1809,7 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
                 IsFnBurntTxn = true;
                 //LogPrintf("IsFnBurntTxn is true now\n");
             }else {
-                IsFnBurntTxn = false;
+                //IsFnBurntTxn = false;
                 //LogPrintf("IsFnBurntTxn is flase Now, for FNamount = %d, nTxValueIn = %d, nTxValurOut = %d\n", GetFNCollateral(pindex->nHeight), nTxValueIn, nTxValueOut);
             }
 
