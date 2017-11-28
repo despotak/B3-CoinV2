@@ -13,7 +13,7 @@
 
 TEMPLATE = app
 TARGET = b3coin-qt
-VERSION = 3.0.0.3
+VERSION = 3.0.0.4
 INCLUDEPATH += src src/json src/qt
 QT += network 
 DEFINES += ENABLE_WALLET
