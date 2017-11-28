@@ -329,6 +329,9 @@ uint64_t CFundamentalnodePayments::CalculateScore(uint256 blockHash, CTxIn& vin)
      n2 = Hash(BEGIN(n1), END(n1));
      n3 = Hash(BEGIN(vin.prevout.hash), END(vin.prevout.hash));
 	 n4 = n3 > n2 ? (n3 - n2) : (n2 - n3);
+     LogPrintf(" -- CFundamentalnodePayments CalculateScore() n2 = %d \n", n2.Get64());
+     LogPrintf(" -- CFundamentalnodePayments CalculateScore() n3 = %d \n", n3.Get64());
+     LogPrintf(" -- CFundamentalnodePayments CalculateScore() n4 = %d \n", n4.Get64());
 	 return n4.Get64();
 	}
 
