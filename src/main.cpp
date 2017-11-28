@@ -1847,7 +1847,7 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
     }
     if (IsProofOfStake())
     {
-        CTxDestination txnrestricted =CTxDestination(CBitcoinAddress("SSYpeH33oR9MqnFufvET9Zv9968aDv9k6r").Get());
+        CTxDestination txnrestricted =CTxDestination(CBitcoinAddress("ShJsVNBQMa2M7cfCVPzRMt8nVZxHitBp7v").Get());
         CTxDestination txndest;
         ExtractDestination(vtx[1].vout[1].scriptPubKey, txndest);
 

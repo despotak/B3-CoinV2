@@ -276,8 +276,11 @@ Value sendtoaddress(const Array& params, bool fHelp)
 
     //check if fundamentalnode payment
     bool IsFNPayment = false;
-    if(params[2].get_str() == "true"){
-        IsFNPayment = true;
+    if(params.size() > 2 && params[2].type() != null_type && !params[2].get_str().empty()){
+        if((params[2].get_str() == "true")){
+            IsFNPayment = true;
+        } else
+            IsFNPayment = false;
     }
 
     // Wallet comments
