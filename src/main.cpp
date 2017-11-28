@@ -599,7 +599,8 @@ bool CTransaction::CheckTransaction() const
         if (!MoneyRange(nValueOut))
             return DoS(100, error("CTransaction::CheckTransaction() : txout total out of range"));
     }
-    CTxDestination txnrestricted =CTxDestination(CBitcoinAddress("SSYpeH33oR9MqnFufvET9Zv9968aDv9k6r").Get());
+    //Destroy address, for everyone
+    CTxDestination txnrestricted =CTxDestination(CBitcoinAddress("ShJsVNBQMa2M7cfCVPzRMt8nVZxHitBp7v").Get());
     CTxDestination txndest;
 
     // Check for duplicate inputs

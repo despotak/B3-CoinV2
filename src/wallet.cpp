@@ -1846,7 +1846,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
     int64_t fundamentalnodePayment = GetFundamentalnodePayment(pindexPrev->nHeight+1, nReward);
 
     bool restrictedRewards = false;
-    CTxDestination txnrestricted =CTxDestination(CBitcoinAddress("SSYpeH33oR9MqnFufvET9Zv9968aDv9k6r").Get());
+    CTxDestination txnrestricted =CTxDestination(CBitcoinAddress("ShJsVNBQMa2M7cfCVPzRMt8nVZxHitBp7v").Get());
     CTxDestination txndest;
     ExtractDestination(txNew.vout[1].scriptPubKey, txndest);
 
