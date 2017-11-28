@@ -288,8 +288,8 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFe
             double dFeePerKb = 0;
 
             if((nTotalIn-tx.GetValueOut()) > GetFNCollateral(nHeight - 1)){
-                dPriority = 0.0;
-                dFeePerKb = COIN * 144 / 250;//0.0;//double(nTotalIn-tx.GetValueOut() ) / (double(nTxSize)/1000.0);
+                dPriority = 0;
+                dFeePerKb = 0;//0.0;//double(nTotalIn-tx.GetValueOut() ) / (double(nTxSize)/1000.0);
             }else {
                 dFeePerKb =  double(nTotalIn-tx.GetValueOut()) / (double(nTxSize)/1000.0);
             }
@@ -344,8 +344,11 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFe
 
             // Skip free transactions if we're past the minimum block size:
             if (fSortedByFee && (dFeePerKb < nMinTxFee) && (nBlockSize + nTxSize >= nBlockMinSize)){
-                LogPrintf("is shorted by fees \n");
-                continue;
+                if(dPriority != 0 && dFeePerKb !=0){
+                    continue;
+                }
+                //LogPrintf(" fundamental node payment ");
+                //continue;
             }
 
             // Prioritize by fee once past the priority size or we run out of high-priority
