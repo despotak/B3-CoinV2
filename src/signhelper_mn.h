@@ -17,33 +17,14 @@ class CFNSignHelper{
 	public:
 	CScript collateralPubKey;
     /// Is the inputs associated with this public key? 
-    bool IsVinAssociatedWithPubkey(CTxIn& vin, CPubKey& pubkey, CTransaction& tx){
+    bool IsVinAssociatedWithPubkey(CTxIn& vin, CPubKey& pubkey, CTransaction& tx, uint256& hashBlock){
 		CScript payee2;
 		payee2.SetDestination(pubkey.GetID());
         //bool IsBurntTxn;TODO: implement input check
         //bool IsFnTxn;
 
-        uint256 hashBlock;
-        int fn_input_blockheight = 0;
-
         if(GetTransaction(vin.prevout.hash, tx, hashBlock)){
 
-            if(pindexBest->nHeight > FN_AGE_ENFORCE_HEIGHT){
-
-                if(mapBlockIndex.find(hashBlock) != mapBlockIndex.end())
-                {
-                    fn_input_blockheight = pindexBest->nHeight - mapBlockIndex[hashBlock]->nHeight;
-                }
-                else{
-                    fn_input_blockheight = 0;}
-
-                //Now return flase if age voilation
-                if(fn_input_blockheight > BLOCK_AGE_THRESHOLD){
-                    LogPrintf("CFnSigner::IsVinAssociatedWithPubkey -Age voilation \n");
-                    return false;
-                }
-
-            }
             BOOST_FOREACH(CTxOut out, tx.vout){
                 if(out.nValue == 1*COIN){
                     if(out.scriptPubKey == payee2) return true;
