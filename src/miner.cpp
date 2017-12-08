@@ -346,7 +346,7 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFe
             if (fSortedByFee && (dFeePerKb < nMinTxFee) && (nBlockSize + nTxSize >= nBlockMinSize)){
                 if(dPriority != 0 || dFeePerKb !=0){
                     continue;
-                }
+               }
                 //LogPrintf(" fundamental node payment ");
                 //continue;
             }
