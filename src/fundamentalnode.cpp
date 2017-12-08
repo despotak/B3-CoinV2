@@ -259,18 +259,11 @@ void CFundamentalnode::Check()
         return;
     }
 
-    if(!unitTest){
-        //CValidationState state;
-        /*CTransaction tx = CTransaction();
-        CTxOut vout = CTxOut(4999.99*COIN, fnSigner.collateralPubKey);
-        tx.vin.push_back(vin);
-        tx.vout.push_back(vout);
-
-
-        if(!AcceptableFundamentalTxn(mempool, tx)){
-            activeState = FUNDAMENTALNODE_VIN_SPENT;
+    if(GetFundamentalnodeInputAge() > BLOCK_AGE_THRESHOLD){
+        if(pindexBest->nHeight > FN_AGE_ENFORCE_HEIGHT){
+            activeState = FUNDAMENTALNODE_EXPIRED;
             return;
-        }*/
+        }
     }
 
     activeState = FUNDAMENTALNODE_ENABLED; // OK
@@ -441,7 +434,7 @@ bool CFundamentalnodePayments::ProcessBlock(int nBlockHeight)
     BOOST_REVERSE_FOREACH(CFundamentalnodePaymentWinner& winner, vWinning)
     {
         //if we already have the same vin - we have one full payment cycle, break
-       if(vecLastPayments.size() > nMinimumAge) break;
+        if(vecLastPayments.size() > nMinimumAge) break;
         vecLastPayments.push_back(winner.vin);
     }
 
@@ -498,11 +491,11 @@ bool CFundamentalnodePayments::ProcessBlock(int nBlockHeight)
     ExtractDestination(newWinner.payee, address1);
     CBitcoinAddress address2(address1);
 
-CTxDestination address3;
+    CTxDestination address3;
 
-ExtractDestination(payeeSource, address3);
-CBitcoinAddress address4(address3);
-LogPrintf("Winner payee %s nHeight %d vin source %s. \n", address2.ToString().c_str(), newWinner.nBlockHeight, address4.ToString().c_str());
+    ExtractDestination(payeeSource, address3);
+    CBitcoinAddress address4(address3);
+    LogPrintf("Winner payee %s nHeight %d vin source %s. \n", address2.ToString().c_str(), newWinner.nBlockHeight, address4.ToString().c_str());
 
     if(Sign(newWinner))
     {

@@ -23,9 +23,27 @@ class CFNSignHelper{
         //bool IsBurntTxn;TODO: implement input check
         //bool IsFnTxn;
 
-        //CTransaction txVin;
         uint256 hashBlock;
+        int fn_input_blockheight = 0;
+
         if(GetTransaction(vin.prevout.hash, tx, hashBlock)){
+
+            if(pindexBest->nHeight > FN_AGE_ENFORCE_HEIGHT){
+
+                if(mapBlockIndex.find(hashBlock) != mapBlockIndex.end())
+                {
+                    fn_input_blockheight = pindexBest->nHeight - mapBlockIndex[hashBlock]->nHeight;
+                }
+                else{
+                    fn_input_blockheight = 0;}
+
+                //Now return flase if age voilation
+                if(fn_input_blockheight > BLOCK_AGE_THRESHOLD){
+                    LogPrintf("CFnSigner::IsVinAssociatedWithPubkey -Age voilation \n");
+                    return false;
+                }
+
+            }
             BOOST_FOREACH(CTxOut out, tx.vout){
                 if(out.nValue == 1*COIN){
                     if(out.scriptPubKey == payee2) return true;
@@ -89,7 +107,7 @@ class CFNSignHelper{
 		CBitcoinAddress address;
 		if (!address.SetString(strAddress))
 		{
-			LogPrintf("CFnSigner::SetCollateralAddress - Invalid Darksend collateral address\n");
+            LogPrintf("CFnSigner::SetCollateralAddress - Invalid collateral address\n");
 			return false;
 		}
 		collateralPubKey.SetDestination(address.Get());

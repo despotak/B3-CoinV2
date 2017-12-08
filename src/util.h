@@ -35,6 +35,7 @@ static const int64_t KILO_COIN = 1000000 * 1000;
 static const int64_t COIN = 1000000 ;
 static const int64_t CENT = 10000 ;
 
+
 #define BEGIN(a)            ((char*)&(a))
 #define END(a)              ((char*)&((&(a))[1]))
 #define UBEGIN(a)           ((unsigned char*)&(a))
