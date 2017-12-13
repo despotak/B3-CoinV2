@@ -26,7 +26,7 @@ extern map<uint256, CFundamentalnodeScanningError> mapFundamentalnodeScanningErr
 extern CFundamentalnodeScanning fnscan;
 
 static const int MIN_FUNDAMENTALNODE_POS_PROTO_VERSION = 70075;
-static const int BLOCK_AGE_THRESHOLD = 7215;
+static const int BLOCK_AGE_THRESHOLD = 7*7215;//7 months
 static const int FN_AGE_ENFORCE_HEIGHT = 85000;
 
 /*
