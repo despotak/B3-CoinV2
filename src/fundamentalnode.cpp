@@ -27,7 +27,7 @@ void ProcessMessageFundamentalnodePayments(CNode* pfrom, std::string& strCommand
     if(IsInitialBlockDownload()) return;
 
     if (strCommand == "fnget") { //Fundamentalnode Payments Request Sync
-        if(fProMode) return; //disable all Darksend/Fundamentalnode related functionality
+        if(fProMode) return; //disable all Fundamentalnode related functionality
 
         if(pfrom->HasFulfilledRequest("fnget")) {
             LogPrintf("fnget - peer already asked me for the list\n");
