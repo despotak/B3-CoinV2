@@ -80,6 +80,7 @@ public:
 
 
         vSeeds.push_back(CDNSSeedData("45.77.137.78", "45.77.137.78"));
+        vSeeds.push_back(CDNSSeedData("45.77.249.100", "45.77.249.100"));
         vSeeds.push_back(CDNSSeedData("85.214.68.75", "85.214.68.75"));
         vSeeds.push_back(CDNSSeedData("188.68.52.172", "188.68.52.172"));
         vSeeds.push_back(CDNSSeedData("107.174.67.211", "107.174.67.211"));
@@ -88,7 +89,7 @@ public:
 
 		
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 63); // first letter "D"
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 63); //
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 85); 
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1, 153);
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x88)(0xB2)(0x1E).convert_to_container<std::vector<unsigned char> >();
