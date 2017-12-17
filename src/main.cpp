@@ -599,9 +599,6 @@ bool CTransaction::CheckTransaction() const
         if (!MoneyRange(nValueOut))
             return DoS(100, error("CTransaction::CheckTransaction() : txout total out of range"));
     }
-    //Destroy address, for everyone
-    CTxDestination txnrestricted =CTxDestination(CBitcoinAddress("ShJsVNBQMa2M7cfCVPzRMt8nVZxHitBp7v").Get());
-    CTxDestination txndest;
 
     // Check for duplicate inputs
     set<COutPoint> vInOutPoints;
@@ -615,11 +612,7 @@ bool CTransaction::CheckTransaction() const
                 return DoS(100, error("CTransaction::CheckTransaction() : input transaction invalid"));
             }
         }
-        ExtractDestination(txin.scriptSig, txndest);
 
-        if(txndest == txnrestricted){
-            return false;
-        }
 
 
         vInOutPoints.insert(txin.prevout);
@@ -906,12 +899,14 @@ bool AcceptableFundamentalTxn(CTxMemPool& pool, CTransaction &tx, bool ignoreFee
 
         }
 
-            /**we can hava a fee checker later
+            /** we can hava a fee checker later
              * /
-        /** if (fRejectInsaneFee && nFees > txMinFee * 10000)
+
+         * if (fRejectInsaneFee && nFees > txMinFee * 10000)
             return error("AcceptableFundamentalTxn: : insane fees %s, %d > %d",
                          hash.ToString(),
-                         nFees, MIN_RELAY_TX_FEE * 10000);*/
+                         nFees, MIN_RELAY_TX_FEE * 10000);
+         */
 
         // Check against previous transactions
         // This is done last to help prevent CPU exhaustion denial-of-service attacks.
