@@ -184,7 +184,7 @@ void SendCoinsDialog::on_sendButton_clicked()
                                                 tr("You are about to send burn payment for a B3 Fundamental Node. Please make sure that you send the following excluding fees:\n"
                                                     "Before block 85000: 25000001 (B3) or 25000.001 (kB3)\n"
                                                     "Block 85001-95000: 20000001 (B3) or 20000.001 (kB3)\n"
-                                                    "After Block 95000: 15000001 (B3) or 15000.001 (kB3)\n"
+                                                    "After block 95000: 15000001 (B3) or 15000.001 (kB3)\n"
 
                                                    "Are you sure? "),
                                                 QMessageBox::Yes | QMessageBox::Cancel);
