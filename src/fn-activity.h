@@ -16,15 +16,15 @@
 #include "fundamentalnode.h"
 
 
-//static const int64_t FUNDAMENTALNODEAMOUNT = (2500000 + 1)*COIN;//2500000;
 inline int64_t GetFNCollateral(int nHeight) {
+
+    if (nHeight > 105000)
+        return 15000000*COIN; //15 million b3 or 15000 kb3
+
     if (nHeight > 85000)
-        return 20000000*COIN; //20 million
+        return 20000000*COIN; //20 million b3 or 20000 kb3
     
-    if (nHeight > 95000)
-        return 15000000*COIN; //15 million
-    
-    return 25000000*COIN; //25 million
+    return 25000000*COIN; //25 million or 25000 kb3
 
 }
 

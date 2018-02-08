@@ -1179,7 +1179,7 @@ int64_t GetProofOfStakeReward(const CBlockIndex* pindexPrev, int64_t nCoinAge, i
 	LogPrint("reation", "Init 5P Block:%d GetProofOfStakeReward(): create=%s nCoinAge=%d\n", pindexPrev->nHeight, FormatMoney(nSubsidy), nCoinAge);
 	return nSubsidy + nFees + staticreward;
 	}
-	if(pindexPrev->nHeight >= VAR10K*10) //100K
+	if(pindexPrev->nHeight >= VAR10K*11) //110K
 	{
 	nSubsidy = nSubsidy*20;
 	LogPrint("creation", "Init 20P Block:%d GetProofOfStakeReward(): create=%s nCoinAge=%d\n", pindexPrev->nHeight, FormatMoney(nSubsidy), nCoinAge);

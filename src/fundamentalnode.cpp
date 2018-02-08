@@ -258,13 +258,14 @@ void CFundamentalnode::Check()
         activeState = FUNDAMENTALNODE_EXPIRED;
         return;
     }
-
-    if(GetFundamentalnodeInputAge() > BLOCK_AGE_THRESHOLD){
-        if(pindexBest->nHeight > FN_AGE_ENFORCE_HEIGHT){
-            activeState = FUNDAMENTALNODE_EXPIRED;
-            return;
-        }
-    }
+    
+    //scryclip 8/01/2018 we should not expire FN nodes after 7 months all so this is removed, FN nodes can run indefinately
+    //if(GetFundamentalnodeInputAge() > BLOCK_AGE_THRESHOLD){
+    //    if(pindexBest->nHeight > FN_AGE_ENFORCE_HEIGHT){
+    //        activeState = FUNDAMENTALNODE_EXPIRED;
+    //        return;
+    //    }
+    //}
 
     activeState = FUNDAMENTALNODE_ENABLED; // OK
 }
