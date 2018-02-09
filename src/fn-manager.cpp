@@ -650,24 +650,26 @@ void CFundamentalnodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, 
         uint256 hashBlock;
         if(fnSigner.IsVinAssociatedWithPubkey(vin, pubkey, tx, hashBlock)) {
 
-            if(pindexBest->nHeight > FN_AGE_ENFORCE_HEIGHT){
+            //No expiry.
 
-                int fn_input_blockheight = 0;
+//            if(pindexBest->nHeight > FN_AGE_ENFORCE_HEIGHT){
 
-                if(mapBlockIndex.find(hashBlock) != mapBlockIndex.end())
-                {
-                    fn_input_blockheight = pindexBest->nHeight - mapBlockIndex[hashBlock]->nHeight;
-                }
-                else{
-                    fn_input_blockheight = 0;}
+//                int fn_input_blockheight = 0;
 
-                //Now return flase if age voilation
-                if(fn_input_blockheight > BLOCK_AGE_THRESHOLD){
-                    LogPrintf("fne -Age voilation \n");
-                    return;
-                }
+//                if(mapBlockIndex.find(hashBlock) != mapBlockIndex.end())
+//                {
+//                    fn_input_blockheight = pindexBest->nHeight - mapBlockIndex[hashBlock]->nHeight;
+//                }
+//                else{
+//                    fn_input_blockheight = 0;}
 
-            }
+//                //Now return flase if age voilation
+//                if(fn_input_blockheight > BLOCK_AGE_THRESHOLD){
+//                    LogPrintf("fne -Age voilation \n");
+//                    return;
+//                }
+
+//            }
 
         }
         else{
