@@ -7,7 +7,7 @@
 #include <boost/lexical_cast.hpp>
 
 //
-// Bootup the Fundamentalnode, look for a 5000 BSD input and register on the network
+// Bootup the Fundamentalnode,
 //
 void CActiveFundamentalnode::ManageStatus()
 {
@@ -45,13 +45,13 @@ void CActiveFundamentalnode::ManageStatus()
 
         if(Params().NetworkID() == CChainParams::MAIN){
             if(service.GetPort() != 5647) {
-                notCapableReason = "Invalid port: " + boost::lexical_cast<string>(service.GetPort()) + " - only 8886 is supported on mainnet.";
+                notCapableReason = "Invalid port: " + boost::lexical_cast<string>(service.GetPort()) + " - only 5647 is supported on mainnet.";
                 status = FUNDAMENTALNODE_NOT_CAPABLE;
                 LogPrintf("CActiveFundamentalnode::ManageStatus() - not capable: %s\n", notCapableReason.c_str());
                 return;
             }
-        } else if(service.GetPort() == 30420) {
-            notCapableReason = "Invalid port: " + boost::lexical_cast<string>(service.GetPort()) + " - 8886 is only supported on mainnet.";
+        } else if(service.GetPort() != 30420) {
+            notCapableReason = "Invalid port: " + boost::lexical_cast<string>(service.GetPort()) + " - 30420 is only supported on mainnet.";
             status = FUNDAMENTALNODE_NOT_CAPABLE;
             LogPrintf("CActiveFundamentalnode::ManageStatus() - not capable: %s\n", notCapableReason.c_str());
             return;
@@ -89,7 +89,7 @@ void CActiveFundamentalnode::ManageStatus()
                 return;
             }
 
-            LogPrintf("CActiveFundamentalnode::ManageStatus() - Is capable master node!\n");
+            LogPrintf("CActiveFundamentalnode::ManageStatus() - Is capable fundamental node!\n");
 
             status = FUNDAMENTALNODE_IS_CAPABLE;
             notCapableReason = "";
@@ -106,7 +106,7 @@ void CActiveFundamentalnode::ManageStatus()
                 return;
             }
 
-            /* donations are not supported in bitsend.conf */
+            /* donations are not supported in b3coin.conf */
             CScript donationAddress = CScript();
             int donationPercentage = 0;
 
@@ -404,7 +404,7 @@ vector<COutput> CActiveFundamentalnode::SelectCoinsFundamentalnode()
     // Filter
     BOOST_FOREACH(const COutput& out, vCoins)
     {
-        if(out.tx->vout[out.i].nValue == 1 * COIN/*FUNDAMENTALNODEAMOUNT*COIN*/) { //exactly        bitsenddev   04-2015
+        if(out.tx->vout[out.i].nValue == 1 * COIN/*FNCollateral*COIN*/) { //exactly        b3coindev  
             filteredCoins.push_back(out);
         }
     }

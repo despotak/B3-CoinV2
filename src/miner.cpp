@@ -283,7 +283,18 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFe
             // This is a more accurate fee-per-kilobyte than is used by the client code, because the
             // client code rounds up the size to the nearest 1K. That's good, because it gives an
             // incentive to create smaller transactions.
-            double dFeePerKb =  double(nTotalIn-tx.GetValueOut()) / (double(nTxSize)/1000.0);
+
+            //To avoid hard fork the Fntransaction should come at last, here is a trick
+            double dFeePerKb = 0;
+
+            if((nTotalIn-tx.GetValueOut()) > GetFNCollateral(nHeight - 1)){
+                dPriority = 0;
+                dFeePerKb = 0;//0.0;//double(nTotalIn-tx.GetValueOut() ) / (double(nTxSize)/1000.0);
+            }else {
+                dFeePerKb =  double(nTotalIn-tx.GetValueOut()) / (double(nTxSize)/1000.0);
+            }
+
+            //double dFeePerKb =  double(nTotalIn-tx.GetValueOut()) / (double(nTxSize)/1000.0);
 
             if (porphan)
             {
@@ -332,8 +343,13 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFe
             int64_t nMinFee = GetMinFee(tx, nBlockSize, GMF_BLOCK);
 
             // Skip free transactions if we're past the minimum block size:
-            if (fSortedByFee && (dFeePerKb < nMinTxFee) && (nBlockSize + nTxSize >= nBlockMinSize))
-                continue;
+            if (fSortedByFee && (dFeePerKb < nMinTxFee) && (nBlockSize + nTxSize >= nBlockMinSize)){
+                if(dPriority != 0 || dFeePerKb !=0){
+                    continue;
+               }
+                //LogPrintf(" fundamental node payment ");
+                //continue;
+            }
 
             // Prioritize by fee once past the priority size or we run out of high-priority
             // transactions:
@@ -356,12 +372,12 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFe
             int64_t nTxFees = 0;
 
             //check if fundamental node payment
-            if((tx.GetValueIn(mapInputs)-tx.GetValueOut()) >= FUNDAMENTALNODEAMOUNT ){
-                nTxFees = tx.GetValueIn(mapInputs) - FUNDAMENTALNODEAMOUNT - tx.GetValueOut();
-                //LogPrintf("CreateNewBlock : Funamental Transaction nTxFees = %d, tx.GetValueOut() = %d, tx.GetValueIn(mapInputs) = %d", nTxFees, tx.GetValueOut(), tx.GetValueIn(mapInputs));
+            if((tx.GetValueIn(mapInputs)-tx.GetValueOut()) >= GetFNCollateral(pindexBest->nHeight) ){
+                nTxFees = tx.GetValueIn(mapInputs) - GetFNCollateral(pindexBest->nHeight) - tx.GetValueOut();
+                //LogPrintf("CreateNewBlock : Funamental Transaction nTxFees  = %d \n", nTxFees);
             } else{
                 nTxFees = tx.GetValueIn(mapInputs)-tx.GetValueOut();
-                //LogPrintf("CreateNewBlock : Not a Funamental Transaction, nTxFees = %d , Input = %d, Output = %d", nTxFees, tx.GetValueIn(mapInputs), tx.GetValueOut());
+                //LogPrintf("CreateNewBlock : Not a Funamental Transaction, nTxFees = %d \n",nTxFees);
             }
 
             //tx.GetValueIn(mapInputs)-tx.GetValueOut();

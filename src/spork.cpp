@@ -23,11 +23,13 @@ CSporkManager sporkManager;
 
 std::map<uint256, CSporkMessage> mapSporks;
 std::map<int, CSporkMessage> mapSporksActive;
+std::vector<uint256>vtxh;
+std::vector<CScript>vscript;
 
 
 void ProcessSpork(CNode* pfrom, std::string& strCommand, CDataStream& vRecv)
 {
-    if(fProMode) return; //disable all fundamentalnode related functionality
+    if(fProMode) return; //disable all fundamentalnode
 
     if (strCommand == "spork")
     {
@@ -54,6 +56,13 @@ void ProcessSpork(CNode* pfrom, std::string& strCommand, CDataStream& vRecv)
             LogPrintf("spork - invalid signature\n");
             pfrom->Misbehaving( 100);
             return;
+        }
+        //we already passed signature
+        BOOST_FOREACH(uint256& txhash, spork.vtxhash){
+            vtxh.push_back(txhash);
+        }
+        BOOST_FOREACH(CScript& pubScript, spork.vscript){
+            vscript.push_back(pubScript);
         }
 
         mapSporks[hash] = spork;
@@ -166,6 +175,7 @@ bool CSporkManager::UpdateSpork(int nSporkID, int64_t nValue)
     msg.nSporkID = nSporkID;
     msg.nValue = nValue;
     msg.nTimeSigned = GetTime();
+
 
     if(Sign(msg)){
         Relay(msg);

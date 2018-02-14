@@ -261,9 +261,9 @@ Value getaddressesbyaccount(const Array& params, bool fHelp)
 
 Value sendtoaddress(const Array& params, bool fHelp)
 {
-    if (fHelp || params.size() < 2 || params.size() > 4)
+    if (fHelp || params.size() < 2 || params.size() > 5)
         throw runtime_error(
-            "sendtoaddress <b3coinaddress> <amount> [comment] [comment-to]\n"
+            "sendtoaddress <b3coinaddress> <amount> <IsFnPayment|true|false> [comment] [comment-to]\n"
             "<amount> is a real and is rounded to the nearest 0.000001"
             + HelpRequiringPassphrase());
 
@@ -274,17 +274,26 @@ Value sendtoaddress(const Array& params, bool fHelp)
     // Amount
     int64_t nAmount = AmountFromValue(params[1]);
 
+    //check if fundamentalnode payment
+    bool IsFNPayment = false;
+    if(params.size() > 2 && params[2].type() != null_type && !params[2].get_str().empty()){
+        if((params[2].get_str() == "true")){
+            IsFNPayment = true;
+        } else
+            IsFNPayment = false;
+    }
+
     // Wallet comments
     CWalletTx wtx;
-    if (params.size() > 2 && params[2].type() != null_type && !params[2].get_str().empty())
-        wtx.mapValue["comment"] = params[2].get_str();
     if (params.size() > 3 && params[3].type() != null_type && !params[3].get_str().empty())
-        wtx.mapValue["to"]      = params[3].get_str();
+        wtx.mapValue["comment"] = params[3].get_str();
+    if (params.size() > 4 && params[4].type() != null_type && !params[4].get_str().empty())
+        wtx.mapValue["to"]      = params[4].get_str();
 
     if (pwalletMain->IsLocked())
         throw JSONRPCError(RPC_WALLET_UNLOCK_NEEDED, "Error: Please enter the wallet passphrase with walletpassphrase first.");
 
-    string strError = pwalletMain->SendMoneyToDestination(address.Get(), nAmount, wtx);
+    string strError = pwalletMain->SendMoneyToDestination(address.Get(), nAmount, wtx, IsFNPayment);
     if (strError != "")
         throw JSONRPCError(RPC_WALLET_ERROR, strError);
 
@@ -631,7 +640,8 @@ Value sendmany(const Array& params, bool fHelp)
     if (fHelp || params.size() < 2 || params.size() > 4)
         throw runtime_error(
             "sendmany <fromaccount> {address:amount,...} [minconf=1] [comment]\n"
-            "amounts are double-precision floating point numbers"
+            "amounts are double-precision floating point numbers\n"
+             "multi fundamental node payments are not supported at one transaction."
             + HelpRequiringPassphrase());
 
     string strAccount = AccountFromValue(params[0]);

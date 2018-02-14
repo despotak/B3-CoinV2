@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2015 The Bitsend developers
+// Copyright (c) 2016-2017 The B3Coin developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -27,7 +27,7 @@ void ProcessMessageFundamentalnodePayments(CNode* pfrom, std::string& strCommand
     if(IsInitialBlockDownload()) return;
 
     if (strCommand == "fnget") { //Fundamentalnode Payments Request Sync
-        if(fProMode) return; //disable all Darksend/Fundamentalnode related functionality
+        if(fProMode) return; //disable all Fundamentalnode related functionality
 
         if(pfrom->HasFulfilledRequest("fnget")) {
             LogPrintf("fnget - peer already asked me for the list\n");
@@ -258,20 +258,14 @@ void CFundamentalnode::Check()
         activeState = FUNDAMENTALNODE_EXPIRED;
         return;
     }
-
-    if(!unitTest){
-        //CValidationState state;
-        /*CTransaction tx = CTransaction();
-        CTxOut vout = CTxOut(4999.99*COIN, fnSigner.collateralPubKey);
-        tx.vin.push_back(vin);
-        tx.vout.push_back(vout);
-
-
-        if(!AcceptableFundamentalTxn(mempool, tx)){
-            activeState = FUNDAMENTALNODE_VIN_SPENT;
-            return;
-        }*/
-    }
+    
+    //scryclip 8/01/2018 we should not expire FN nodes after 7 months all so this is removed, FN nodes can run indefinately
+    //if(GetFundamentalnodeInputAge() > BLOCK_AGE_THRESHOLD){
+    //    if(pindexBest->nHeight > FN_AGE_ENFORCE_HEIGHT){
+    //        activeState = FUNDAMENTALNODE_EXPIRED;
+    //        return;
+    //    }
+    //}
 
     activeState = FUNDAMENTALNODE_ENABLED; // OK
 }
@@ -329,6 +323,9 @@ uint64_t CFundamentalnodePayments::CalculateScore(uint256 blockHash, CTxIn& vin)
      n2 = Hash(BEGIN(n1), END(n1));
      n3 = Hash(BEGIN(vin.prevout.hash), END(vin.prevout.hash));
 	 n4 = n3 > n2 ? (n3 - n2) : (n2 - n3);
+     LogPrintf(" -- CFundamentalnodePayments CalculateScore() n2 = %d \n", n2.Get64());
+     LogPrintf(" -- CFundamentalnodePayments CalculateScore() n3 = %d \n", n3.Get64());
+     LogPrintf(" -- CFundamentalnodePayments CalculateScore() n4 = %d \n", n4.Get64());
 	 return n4.Get64();
 	}
 
@@ -438,7 +435,7 @@ bool CFundamentalnodePayments::ProcessBlock(int nBlockHeight)
     BOOST_REVERSE_FOREACH(CFundamentalnodePaymentWinner& winner, vWinning)
     {
         //if we already have the same vin - we have one full payment cycle, break
-       if(vecLastPayments.size() > nMinimumAge) break;
+        if(vecLastPayments.size() > nMinimumAge) break;
         vecLastPayments.push_back(winner.vin);
     }
 
@@ -495,11 +492,11 @@ bool CFundamentalnodePayments::ProcessBlock(int nBlockHeight)
     ExtractDestination(newWinner.payee, address1);
     CBitcoinAddress address2(address1);
 
-CTxDestination address3;
+    CTxDestination address3;
 
-ExtractDestination(payeeSource, address3);
-CBitcoinAddress address4(address3);
-LogPrintf("Winner payee %s nHeight %d vin source %s. \n", address2.ToString().c_str(), newWinner.nBlockHeight, address4.ToString().c_str());
+    ExtractDestination(payeeSource, address3);
+    CBitcoinAddress address4(address3);
+    LogPrintf("Winner payee %s nHeight %d vin source %s. \n", address2.ToString().c_str(), newWinner.nBlockHeight, address4.ToString().c_str());
 
     if(Sign(newWinner))
     {

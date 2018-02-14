@@ -1,6 +1,6 @@
 
 
-// Copyright (c) 2014-2015 The Bitsend developers
+// Copyright (c) 2016-2017 The B3Coin developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 #ifndef FUNDAMENTALNODE_POS_H
@@ -26,6 +26,8 @@ extern map<uint256, CFundamentalnodeScanningError> mapFundamentalnodeScanningErr
 extern CFundamentalnodeScanning fnscan;
 
 static const int MIN_FUNDAMENTALNODE_POS_PROTO_VERSION = 70075;
+//static const int BLOCK_AGE_THRESHOLD = 7*7215;//7 months
+//static const int FN_AGE_ENFORCE_HEIGHT = 85000;
 
 /*
 	1% of the network is scanned every 2.5 minutes, making a full

@@ -13,7 +13,7 @@
 
 TEMPLATE = app
 TARGET = b3coin-qt
-VERSION = 2.0.0.2
+VERSION = 3.1.1.2
 INCLUDEPATH += src src/json src/qt
 QT += network 
 DEFINES += ENABLE_WALLET
@@ -110,7 +110,7 @@ contains(USE_UPNP, -) {
         #USE_UPNP=1
     #}
     #DEFINES += USE_UPNP=$$USE_UPNP STATICLIB
-    I#NCLUDEPATH += /usr/local/miniupnpc/include
+    #NCLUDEPATH += /usr/local/miniupnpc/include
     #MINIUPNPC_LIB_PATH = /usr/local/miniupnpc/lib
     #LIBS += $$join(MINIUPNPC_LIB_PATH,,-L,) -lminiupnpc
     #win32:LIBS += -liphlpapi

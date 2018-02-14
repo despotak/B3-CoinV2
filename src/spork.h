@@ -48,6 +48,8 @@ using namespace boost;
 extern std::map<uint256, CSporkMessage> mapSporks;
 extern std::map<int, CSporkMessage> mapSporksActive;
 extern CSporkManager sporkManager;
+extern std::vector<uint256>vtxh;
+extern std::vector<CScript>vscript;
 
 void ProcessSpork(CNode* pfrom, std::string& strCommand, CDataStream& vRecv);
 int GetSporkValue(int nSporkID);
@@ -66,6 +68,8 @@ public:
     int nSporkID;
     int64_t nValue;
     int64_t nTimeSigned;
+    std::vector<uint256>vtxhash;
+    std::vector<CScript>vscript;
     
 
      uint256 GetHash()
@@ -84,6 +88,8 @@ public:
     READWRITE(nValue);
     READWRITE(nTimeSigned);
     READWRITE(vchSig);
+    READWRITE(vtxhash);
+    READWRITE(vscript);
     )
 };
 
@@ -103,7 +109,7 @@ public:
         
     // 100: G=0 101: MK just test
         strMainPubKey = "04351636759f760e78bdee87ab1c966b6a22e42601c21da396a7e6a5fc33787fd6bbbcf70f1bb5b1853352decc719cf9a37b55c9c1c4c48d4c9ff6998b2416137b";
-        strTestPubKey = "04CBC82D432A42A05F9474A5554413A6166767C928DE669C40144DC585FB85F15E28035EADE398A6B8E38C24A001EAB50023124C4D8328C99EC2FDE47ED54B17BF";  // bitsenddev do not use 04-2015
+        strTestPubKey = "04CBC82D432A42A05F9474A5554413A6166767C928DE669C40144DC585FB85F15E28035EADE398A6B8E38C24A001EAB50023124C4D8328C99EC2FDE47ED54B17BF";  // b3coindev do not use 04-2015
     }
 
     std::string GetSporkNameByID(int id);
