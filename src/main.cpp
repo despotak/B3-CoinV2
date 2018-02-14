@@ -742,6 +742,7 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CTransaction &tx, bool fLimitFree,
             isFNtransaction = true;
             //LogPrintf("Fundamental transaction amount %s \n", nFees);
         } else {
+
             //LogPrintf("Not Fundamental transaction\n");
             nFees = tx.GetValueIn(mapInputs) - tx.GetValueOut();
         }
